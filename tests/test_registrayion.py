@@ -9,7 +9,7 @@ def test_register_user(page:Page):
     expect(page).to_have_title("Automation Exercise")
     expect(page.locator(".title", has_text="Features Items")).to_be_visible()
 
-    # Click Signup/Login and register/logic
+    # test Signup
     page.get_by_role("link", name="Signup / Login").click()
     expect(page.get_by_text("Login to your account")).to_be_visible()
     expect(page.get_by_text("New User Signup!")).to_be_visible()
@@ -38,3 +38,20 @@ def test_register_user(page:Page):
     page.locator("input[data-qa=zipcode]").fill("80937")
     page.locator("input[data-qa=mobile_number]").fill("01778414899")
     page.get_by_role("button", name="Create Account").click()
+
+def test_login_user(page: Page):
+    page.goto("https://automationexercise.com/")
+
+    # Verify homepage is loaded successfully
+    expect(page).to_have_title("Automation Exercise")
+    expect(page.locator(".title", has_text="Features Items")).to_be_visible()
+
+    # test Signup
+    page.get_by_role("link", name="Signup / Login").click()
+    expect(page.get_by_text("Login to your account")).to_be_visible()
+    expect(page.get_by_text("New User Signup!")).to_be_visible()
+
+    # test Login
+    page.locator("input[data-qa=login-email]").fill("adel.dola@gmail.com")
+    page.locator("input[data-qa=login-password]").fill("123456789")
+    page.get_by_role("button", name="Login").click()
