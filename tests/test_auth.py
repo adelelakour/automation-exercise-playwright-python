@@ -1,8 +1,9 @@
 from playwright.sync_api import  Playwright, Page, expect
-import re
 import random
+import pytest
 
-def test_register_user(page:Page):
+@pytest.mark.auth
+def test_register_new_user(page:Page):
     page.goto("https://automationexercise.com/")
 
     # Verify homepage is loaded successfully
@@ -43,46 +44,33 @@ def test_register_user(page:Page):
     expect(page.get_by_text("Account Created")).to_be_visible()
     page.get_by_role("link", name="Continue").click()
 
-def test_register_existing_email(page:Page):
-    page.goto("https://automationexercise.com/")
-
-    # Verify homepage is loaded successfully
+    #verify redirection to home page
     expect(page).to_have_title("Automation Exercise")
-    expect(page.locator(".title", has_text="Features Items")).to_be_visible()
 
-    # test Signup
-    page.get_by_role("link", name="Signup / Login").click()
-    expect(page.get_by_text("Login to your account")).to_be_visible()
-    expect(page.get_by_text("New User Signup!")).to_be_visible()
+@pytest.mark.auth
+def test_register_existing_email(page:Page):
+    page.goto("https://automationexercise.com/login")
 
     page.get_by_placeholder("Name").fill("Adel")
     page.locator("[data-qa='signup-email']").fill("adel.elakour@gmail.com")
     page.locator("[data-qa='signup-button']").click()
 
-def test_login_valid_user(page: Page):
-    #open login/registration page
-    page.goto("https://automationexercise.com/")
-    expect(page).to_have_title("Automation Exercise")
-    expect(page.locator(".title", has_text="Features Items")).to_be_visible()
+    #verify the error message
+    expect(page.get_by_text("Email Address already exist!")).to_be_visible()
 
-    page.get_by_role("link", name="Signup / Login").click()
-    expect(page.get_by_text("Login to your account")).to_be_visible()
-    expect(page.get_by_text("New User Signup!")).to_be_visible()
+@pytest.mark.auth
+def test_login_valid_user(page: Page):
+    page.goto("https://automationexercise.com/login")
 
     # test Login with correct credentials
     page.locator("input[data-qa=login-email]").fill("adel.elakour@gmail.com")
     page.locator("input[data-qa=login-password]").fill("123456789")
     page.get_by_role("button", name="Login").click()
+    expect(page.get_by_text("Logged in as")).to_be_visible()
 
+@pytest.mark.auth
 def test_login_invalid_user(page: Page):
-    #open login/registration page
-    page.goto("https://automationexercise.com/")
-    expect(page).to_have_title("Automation Exercise")
-    expect(page.locator(".title", has_text="Features Items")).to_be_visible()
-
-    page.get_by_role("link", name="Signup / Login").click()
-    expect(page.get_by_text("Login to your account")).to_be_visible()
-    expect(page.get_by_text("New User Signup!")).to_be_visible()
+    page.goto("https://automationexercise.com/login")
 
     # test Login with correct credentials
     page.locator("input[data-qa=login-email]").fill("adel.dodo@gmail.com")
@@ -90,21 +78,17 @@ def test_login_invalid_user(page: Page):
     page.get_by_role("button", name="Login").click()
     expect(page.get_by_text("Your email or password is incorrect")).to_be_visible()
 
+@pytest.mark.auth
 def test_logout(page: Page):
 
     #open login/registration page
-    page.goto("https://automationexercise.com/")
-    expect(page).to_have_title("Automation Exercise")
-    expect(page.locator(".title", has_text="Features Items")).to_be_visible()
+    page.goto("https://automationexercise.com/login")
 
-    page.get_by_role("link", name="Signup / Login").click()
-    expect(page.get_by_text("Login to your account")).to_be_visible()
-    expect(page.get_by_text("New User Signup!")).to_be_visible()
-
-    # test Login with correct credentials
+    # Login with correct credentials
     page.locator("input[data-qa=login-email]").fill("adel.elakour@gmail.com")
     page.locator("input[data-qa=login-password]").fill("123456789")
     page.get_by_role("button", name="Login").click()
 
+    expect(page.get_by_text("Logout")).to_be_visible()
     # logout
     page.get_by_role("link", name="Logout").click()
