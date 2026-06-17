@@ -1,7 +1,6 @@
 from playwright.sync_api import  Playwright, Page, expect
-import re
 
-def test_add_multiple_products_to_cart(page:Page):
+def test_add_multiple_products_into_cart(page:Page):
 
     page.goto("https://automationexercise.com/")
     first_product = page.locator(".col-sm-4").nth(1)

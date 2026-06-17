@@ -1,5 +1,4 @@
 from playwright.sync_api import  Playwright, Page, expect
-import re
 from pathlib import Path
 
 def test_contact_form(page:Page):
