@@ -1,6 +1,7 @@
 from playwright.sync_api import  Playwright, Page, expect
-from pages.base_page import BasePage
-from pages.login_page import Login
+from pages.login_page import Login, Signup
+import random
+
 
 class Test_Login():
 
@@ -16,9 +17,17 @@ class Test_Login():
         login.login_valid_credential("adel.elakour@gmail.com", "22558899")
         expect(page.get_by_text("Your email or password is incorrect")).to_be_visible()
 
+class Test_Signup():
 
+    def test_create_account(self, page:Page):
+        page.goto("https://automationexercise.com/login")
+        signUp = Signup(page)
+        rand_num = random.randint(0,3000)
+        signUp.create_account("Dodo", f"Madeha{rand_num}@gmail.com", "Mr. ", "123456789", "23", "August", "1992",
+                              "madeha", "dola", "Dumyat Gadeda", "Canada",
+                              "Ontario", "Toronto", "20784", "01086379016")
 
-
+        expect(page.get_by_text("Account Created", exact=False)).to_be_visible()
 
 
 
