@@ -1,6 +1,6 @@
 import pytest
 from playwright.sync_api import Page, Expect
-
+from pages.cart_page import Cart
 
 @pytest.fixture()
 def login(page:Page):
@@ -10,6 +10,13 @@ def login(page:Page):
     page.get_by_role("button", name="Login").click()
     return page
 
+
+@pytest.fixture()
+def cart_with_products(page:Page):
+    page.goto("/products")
+    cart = Cart(page)
+    cart.add_products_to_cart()
+    return cart
 
 @pytest.fixture()
 def payment():

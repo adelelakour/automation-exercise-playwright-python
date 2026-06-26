@@ -24,7 +24,6 @@ class Test_Login():
         eval_msg = login.login_email_address.evaluate("element => element.validationMessage")
         assert eval_msg == "Please fill out this field."
 
-
 class Test_Signup():
 
     def test_create_account_valid_data(self, page:Page):
