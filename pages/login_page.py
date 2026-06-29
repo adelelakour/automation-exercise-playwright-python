@@ -1,4 +1,7 @@
+from pytest_playwright.pytest_playwright import playwright
+
 from pages.base_page import BasePage
+from playwright.sync_api import TimeoutError as PlayrightTimeOut
 
 class Login(BasePage):
     def __init__(self, page):
@@ -43,7 +46,13 @@ class Signup(BasePage):
         self.mobile =   page.get_by_role("textbox", name="Mobile Number *")
         self.create_account_button = page.get_by_role("button", name="Create Account")
 
-    def create_account(self, signup_name, signup_email, gender, password, day, month,
+
+    # def accept_popup_if_visible(self):
+    #     try:
+    #         with self.page.expect_event("dialog", timeout=5000) as dialog_info:
+    #             dialog.acc
+
+    def create_account_valid_data(self, signup_name, signup_email, gender, password, day, month,
                        year, first_name, last_name, address, country, state, city, zip, mobile_number):
 
         #first_signup_page
@@ -71,6 +80,12 @@ class Signup(BasePage):
 
         self.create_account_button.click()
 
+
+    def create_account_existing_email(self, signup_name, signup_email):
+        #first_signup_page
+        self.signup_name.fill(signup_name)
+        self.signup_email.fill(signup_email)
+        self.signup_button.click()
 
     def create_account_invalid_email(self, signup_name, signup_email):
         #first_signup_page

@@ -1,5 +1,6 @@
 from playwright.sync_api import  Playwright, Page, expect
 from pages.login_page import Login, Signup, ContactUs
+from utils.cookies import accept_cookies
 import random
 
 
@@ -36,7 +37,6 @@ class Test_Signup():
 
         expect(page.get_by_text("Account Created", exact=False)).to_be_visible()
 
-
     def test_create_account_invalid_data(self, page:Page):
         page.goto("/login")
         signUp = Signup(page)
@@ -44,6 +44,12 @@ class Test_Signup():
 
         eval_msg = signUp.signup_email.evaluate("element => element.validationMessage")
         assert "Please include an" in eval_msg
+
+    def test_create_account_existing_email(self, page:Page):
+        page.goto("/login")
+        accept_cookies(page)
+        signUp = Signup(page)
+        signUp.create_account_existing_email("adel", "adel.elakour@gmail.com")
 
 class Test_ContactUs():
 
