@@ -14,3 +14,4 @@ class Test_Payment():
                           "2030"
                           )
         expect(page.get_by_text("Order Placed")).to_be_visible()
+

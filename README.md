@@ -1,8 +1,8 @@
-# Automation Exercise UI Test Suite
+# Ecommerce Playwright Automation Framework
 
 This repository contains end-to-end UI tests for [Automation Exercise](https://automationexercise.com/) using Python, `pytest`, and Playwright.
 
-The suite exercises common storefront flows including authentication, contact form submission, cart behavior, checkout, and one end-to-end purchase journey.
+The suite covers the main storefront flows implemented in the current codebase: authentication, signup, contact form submission, cart actions, checkout and payment, and basic page validation.
 
 ## Tech Stack
 
@@ -10,6 +10,7 @@ The suite exercises common storefront flows including authentication, contact fo
 - `pytest`
 - `playwright`
 - `pytest-playwright`
+- `pytest-html`
 
 ## Project Structure
 
@@ -21,89 +22,97 @@ The suite exercises common storefront flows including authentication, contact fo
 │   └── user_actions.py
 ├── images/
 │   └── shirt.jpg
+├── pages/
+│   ├── base_page.py
+│   ├── cart_page.py
+│   ├── login_page.py
+│   └── payment_page.py
 ├── pytest.ini
 ├── README.md
+├── reports/
+│   ├── assets/
+│   └── report.html
 ├── requirements.txt
 └── tests/
     ├── test_auth.py
     ├── test_cart.py
-    ├── test_checkout.py
     ├── test_contact_form.py
-    ├── test_end_to_end_user_journey.py
+    ├── test_payment.py
     └── test_verify_pages.py
 ```
 
-## What Is Covered
+## Test Coverage
 
-### Authentication
+### Authentication and Signup
 
-[`tests/test_auth.py`](/home/adelelakour/automation-exercise-playwright-python/tests/test_auth.py)
+[`tests/test_auth.py`](/home/adelelakour/ecommerce-playwright-automation-framework/tests/test_auth.py)
 
-- Register a new user with a randomized email address
-- Attempt signup with an existing email
-- Login with valid credentials
-- Verify invalid login handling
-- Logout
+- Valid login
+- Invalid login
+- Blank login validation
+- Account creation with randomized email data
+- Invalid signup email validation
+
+### Contact Us
+
+[`tests/test_auth.py`](/home/adelelakour/ecommerce-playwright-automation-framework/tests/test_auth.py) and [`tests/test_contact_form.py`](/home/adelelakour/ecommerce-playwright-automation-framework/tests/test_contact_form.py)
+
+- Submit the Contact Us form through a page object
+- Upload `images/shirt.jpg`
+- Accept the browser confirmation dialog
+- Exercise a direct form submission flow
 
 ### Cart
 
-[`tests/test_cart.py`](/home/adelelakour/automation-exercise-playwright-python/tests/test_cart.py)
+[`tests/test_cart.py`](/home/adelelakour/ecommerce-playwright-automation-framework/tests/test_cart.py)
 
-- Add multiple products to the cart
-- Update product quantity before adding to cart
-- Remove a product from the cart
+- Add products with custom quantities
+- Open the cart after adding items
+- Remove an item from the cart
 
-### Checkout
+### Payment and Checkout
 
-[`tests/test_checkout.py`](/home/adelelakour/automation-exercise-playwright-python/tests/test_checkout.py)
+[`tests/test_payment.py`](/home/adelelakour/ecommerce-playwright-automation-framework/tests/test_payment.py)
 
 - Login through a shared fixture
-- Add a product to the cart
-- Proceed through checkout
-- Submit payment details through a shared payment fixture
-
-### Contact Form
-
-[`tests/test_contact_form.py`](/home/adelelakour/automation-exercise-playwright-python/tests/test_contact_form.py)
-
-- Open the Contact Us page
-- Fill the form
-- Upload `images/shirt.jpg`
-- Accept the browser dialog triggered on submission
-
-### End-to-End Purchase Flow
-
-[`tests/test_end_to_end_user_journey.py`](/home/adelelakour/automation-exercise-playwright-python/tests/test_end_to_end_user_journey.py)
-
-- Register a new user
-- Add multiple items
-- Remove one item
-- Complete checkout and payment
+- Reuse a shared cart fixture
+- Complete checkout
+- Submit payment details and confirm the order
 
 ### Navigation and Product Pages
 
-[`tests/test_verify_pages.py`](/home/adelelakour/automation-exercise-playwright-python/tests/test_verify_pages.py)
+[`tests/test_verify_pages.py`](/home/adelelakour/ecommerce-playwright-automation-framework/tests/test_verify_pages.py)
 
 - Verify the Test Cases page
-- Verify the Products page and product details view
-- Verify product search
+- Verify product details content
+- Search for a product and validate results
 
-## Shared Test Utilities
+## Framework Design
 
-[`conftest.py`](/home/adelelakour/automation-exercise-playwright-python/conftest.py)
+### Page Objects
 
-- `login` fixture logs in with a fixed demo account
-- `payment` fixture fills the payment form during checkout
+The `pages/` package contains small page-object classes for reusable actions:
 
-[`helpers/user_actions.py`](/home/adelelakour/automation-exercise-playwright-python/helpers/user_actions.py)
+- [`pages/login_page.py`](/home/adelelakour/ecommerce-playwright-automation-framework/pages/login_page.py): login, signup, and contact form interactions
+- [`pages/cart_page.py`](/home/adelelakour/ecommerce-playwright-automation-framework/pages/cart_page.py): product add/remove cart flows
+- [`pages/payment_page.py`](/home/adelelakour/ecommerce-playwright-automation-framework/pages/payment_page.py): checkout and payment steps
 
-- Reusable helper functions for registration, cart manipulation, and payment
-- Used by the end-to-end journey test
+### Fixtures
+
+[`conftest.py`](/home/adelelakour/ecommerce-playwright-automation-framework/conftest.py) defines shared fixtures for:
+
+- `login`: signs in with a fixed account
+- `cart_with_products`: preloads the cart with products
+- `payment`: returns a helper that fills payment fields
+
+### Helpers
+
+[`helpers/user_actions.py`](/home/adelelakour/ecommerce-playwright-automation-framework/helpers/user_actions.py) contains reusable flow helpers for registration, cart manipulation, and payment processing.
 
 ## Setup
 
 1. Create and activate a virtual environment.
-2. Install dependencies.
+2. Install project dependencies.
 3. Install Playwright browser binaries.
 
 ```bash
@@ -113,7 +122,7 @@ pip install -r requirements.txt
 playwright install
 ```
 
-## Running The Tests
+## Running Tests
 
 Run the full suite:
 
@@ -121,13 +130,13 @@ Run the full suite:
 pytest
 ```
 
-Run a single file:
+Run a single test module:
 
 ```bash
-pytest tests/test_checkout.py
+pytest tests/test_payment.py
 ```
 
-Run tests matching a name:
+Run tests by keyword:
 
 ```bash
 pytest -k "login"
@@ -139,20 +148,39 @@ Run in headed mode:
 pytest --headed
 ```
 
-## Assumptions And Limitations
+Generate an HTML report:
 
-- The suite targets the live public site, so failures can come from site changes, latency, or temporary downtime.
-- Several tests use hard-coded demo credentials and payment values.
-- The registration flow generates a random email address to reduce collisions.
-- `pytest.ini` is currently empty.
-- Some test modules contain duplicated test function names; in Python, the last definition wins inside that file.
+```bash
+pytest --html=reports/report.html --self-contained-html
+```
+
+## Pytest Configuration
+
+[`pytest.ini`](/home/adelelakour/ecommerce-playwright-automation-framework/pytest.ini)
+
+- `base_url = https://automationexercise.com`
+- Default `addopts = -v`
+- Available markers:
+  - `smoke`
+  - `regression`
+  - `ui`
+  - `auth`
 
 ## Dependencies
 
-[`requirements.txt`](/home/adelelakour/automation-exercise-playwright-python/requirements.txt)
+[`requirements.txt`](/home/adelelakour/ecommerce-playwright-automation-framework/requirements.txt)
 
 ```text
 playwright
 pytest
 pytest-playwright
+pytest-html
+python-dotenv
 ```
+
+## Notes
+
+- The suite targets a live public site, so failures can be caused by site changes, rate limits, popups, or temporary downtime.
+- Some flows depend on hard-coded credentials and card values from the local test suite.
+- Several tests use randomized email addresses to avoid signup collisions.
+- The repository currently includes generated cache folders and an existing HTML report artifact.

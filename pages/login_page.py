@@ -9,7 +9,6 @@ class Login(BasePage):
         self.login_password = page.get_by_placeholder("Password")
         self.login_button = page.get_by_role("button", name="Login")
 
-
     def login_process(self, email, password):
         self.login_tab.click()
         self.login_email_address.fill(email)
@@ -99,6 +98,5 @@ class ContactUs(BasePage):
         self.form_msg.fill(message)
         self.form_attach_file.set_input_files(file_path)
         self.form_submit_button.click()
-
 
 
