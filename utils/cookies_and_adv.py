@@ -5,6 +5,7 @@ from playwright.sync_api import TimeoutError
 def accept_cookies(page: Page):
     buttons = [
         "Accept",
+        "Close",
         "Consent",
         "Accept All",
         "Accept all",
@@ -28,3 +29,25 @@ def accept_cookies(page: Page):
             pass
         except Exception:
             pass
+
+
+
+def register_cookie_handler(page: Page):
+    def accept_cookie_banner():
+        page.get_by_role("button", name="Consent").click()
+
+    page.add_locator_handler(
+        page.get_by_role("button", name="Consent"),
+        accept_cookie_banner
+    )
+
+
+def close_ad_if_visible(page: Page):
+    for frame in page.frames:
+        try:
+            frame.get_by_role("button", name="Close").click(timeout=1000)
+            return True
+        except TimeoutError:
+            pass
+
+    return False

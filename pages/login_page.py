@@ -93,25 +93,10 @@ class Signup(BasePage):
         self.signup_email.fill(signup_email)
         self.signup_button.click()
 
-class ContactUs(BasePage):
-    def __init__(self, page):
-        super().__init__(page)
-        self.page = page
-        self.contactUs_tab = page.get_by_role("link", name="Contact us", exact=False)
-        self.form_name = page.get_by_role("textbox", name="Name")
-        self.form_email = page.get_by_role("textbox", name="Email", exact=True)
-        self.form_subject = page.get_by_role("textbox", name="Subject")
-        self.form_msg = page.get_by_role("textbox", name="Your Message Here")
-        self.form_attach_file = page.get_by_role("button", name="Choose File")
-        self.form_submit_button = page.get_by_role("button", name="Submit")
-
-    def test_contactUs_form(self, name, email, subject, message, file_path):
-        self.contactUs_tab.click()
-        self.form_name.fill(name)
-        self.form_email.fill(email)
-        self.form_subject.fill(subject)
-        self.form_msg.fill(message)
-        self.form_attach_file.set_input_files(file_path)
-        self.form_submit_button.click()
+    def create_account_invalid_email(self, signup_name, signup_email):
+        #first_signup_page
+        self.signup_name.fill(signup_name)
+        self.signup_email.fill(signup_email)
+        self.signup_button.click()
 
 

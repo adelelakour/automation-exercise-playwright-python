@@ -1,10 +1,10 @@
 from playwright.sync_api import  Playwright, Page, expect
 from pages.payment_page import Payment
+from utils.cookies_and_adv import accept_cookies
 
 class Test_Payment():
 
     def test_valid_payment(self, login, cart_with_products, page:Page):
-
         order = Payment(page)
         order.do_checkout("Please drop the order at doorstep",
                           "Adel Elakour",

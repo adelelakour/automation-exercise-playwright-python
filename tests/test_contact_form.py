@@ -1,21 +1,27 @@
 from playwright.sync_api import  Playwright, Page, expect
 from pathlib import Path
+from pages.contact_us_page import ContactUs
+from utils.cookies_and_adv import accept_cookies
 
-def test_contact_form(page:Page):
-    page.goto("https://automationexercise.com/")
-    page.get_by_role("link", name="Contact us").click()
-    page.get_by_placeholder("Name").fill("Adel Elakour")
-    page.get_by_placeholder("Email", exact=True).fill("adel.elakour@gmail.com")
-    page.get_by_placeholder("Subject").fill("Refund request")
-    page.get_by_placeholder("Your Message Here").fill("I ordered a t-shirt within order number AD323A and bla bla ")
-    file_input = page.locator("input[name='upload_file']")
+class Test_ContactUs():
 
-    project_root = Path(__file__).resolve().parents[1]
-    image_path = project_root / "images" / "shirt.jpg"
+    def test_contactUs_valid(self, page:Page):
 
-    page.locator("input[name='upload_file']").set_input_files(str(image_path))
+        PROJECT_ROOT = Path(__file__).resolve().parents[1]
+        SHIRT_IMAGE = PROJECT_ROOT / "images" / "shirt.jpg"
+
+        page.goto("/contact_us")
+        # page.on("dialog", lambda dialog: dialog.accept())
+        contact_us = ContactUs(page)
+        contact_us.test_contactUs_form("adel", "adel.elakour@gmail.com", "Refund Request",
+                                       "Hi, I bought this shirt, but the quality is lower than I expected. Could you please issue me a refund?", SHIRT_IMAGE)
+        expect(page.get_by_text("Get In Touch")).to_be_visible()
 
 
-    file_input = page.locator("input[name='submit']").click()
-    page.on("dialog", lambda dialog: dialog.accept())
-    
+    def test_contactUs_invalid(self, page:Page):
+        page.goto("/contact_us")
+        contact_us = ContactUs(page)
+        contact_us.test_contactUs_form("adel", "adel.elakour@gmail.com", "Refund Request",
+                                       "Hi, I bought this shirt, but the quality is lower than I expected. Could you please issue me a refund?", "images/shirt.jpg")
+        expect(page.)
+
