@@ -11,9 +11,8 @@ class Test_ContactUs():
         SHIRT_IMAGE = PROJECT_ROOT / "images" / "shirt.jpg"
 
         page.goto("/contact_us")
-        # page.on("dialog", lambda dialog: dialog.accept())
         contact_us = ContactUs(page)
-        contact_us.test_contactUs_form("adel", "adel.elakour@gmail.com", "Refund Request",
+        contact_us.contract_us_form("adel", "adel.elakour@gmail.com", "Refund Request",
                                        "Hi, I bought this shirt, but the quality is lower than I expected. Could you please issue me a refund?", SHIRT_IMAGE)
         expect(page.get_by_text("Get In Touch")).to_be_visible()
 
@@ -21,7 +20,6 @@ class Test_ContactUs():
     def test_contactUs_invalid(self, page:Page):
         page.goto("/contact_us")
         contact_us = ContactUs(page)
-        contact_us.test_contactUs_form("adel", "adel.elakour@gmail.com", "Refund Request",
+        contact_us.test_contactUs_form("adel", "adel.elakour.com", "Refund Request",
                                        "Hi, I bought this shirt, but the quality is lower than I expected. Could you please issue me a refund?", "images/shirt.jpg")
-        expect(page.)
-
+        expect(page.get_by_placeholder("Email").evaluate("element => element.va").)

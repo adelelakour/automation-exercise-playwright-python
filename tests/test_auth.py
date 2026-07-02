@@ -1,5 +1,5 @@
 from playwright.sync_api import  Playwright, Page, expect
-from pages.login_page import Login, Signup, ContactUs
+from pages.login_page import Login, Signup
 from utils.cookies_and_adv import accept_cookies
 import random
 from pathlib import Path
